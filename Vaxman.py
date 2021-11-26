@@ -495,10 +495,41 @@ def startGame():
                   Pacman.changespeed(0,-30)
 
           if event.type == ADDGHOSTS:
-            for ghost in monsta_list.sprites():
-              new_ghost = ghost.rect.copy()
-              monsta_list.add(new_ghost)
-              all_sprites_list.add(new_ghost)
+            for ghost in blinky_list.sprites():
+              x = ghost.rect.top
+              y = ghost.rect.left
+              new_blinky = Ghost(x, y, 'images/Blinky.png')
+              monsta_list.add(new_blinky)
+              all_sprites_list.add(new_blinky)
+              blinky_list.add(new_blinky)
+              num_of_ghosts+=1
+            
+            for ghost in pinky_list.sprites():
+              x = ghost.rect.top
+              y = ghost.rect.left
+              new_pinky = Ghost(x, y, 'images/Pinky.png')
+              monsta_list.add(new_pinky)
+              all_sprites_list.add(new_pinky)
+              pinky_list.add(new_pinky)
+              num_of_ghosts+=1
+            
+            for ghost in inky_list.sprites():
+              x = ghost.rect.top
+              y = ghost.rect.left
+              new_inky = Ghost(x, y, 'images/Inky.png')
+              monsta_list.add(new_inky)
+              all_sprites_list.add(new_inky)
+              inky_list.add(new_inky)
+              num_of_ghosts=+1
+            
+            for ghost in clyde_list.sprites():
+              x = ghost.rect.top
+              y = ghost.rect.left
+              new_clyde = Ghost(x, y, 'images/Clyde.png')
+              monsta_list.add(new_clyde)
+              all_sprites_list.add(new_clyde)
+              clyde_list.add(new_clyde)
+              num_of_ghosts+=1
 
           
       # ALL EVENT PROCESSING SHOULD GO ABOVE THIS COMMENT
