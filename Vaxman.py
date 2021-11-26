@@ -2,7 +2,7 @@
 # Forked from https://github.com/hbokmann/Pacman
 # Addapted for EA Games Forage Virtual Internship
 
-import pygame._view
+import pygame
   
 black = (0,0,0)
 white = (255,255,255)
@@ -12,13 +12,13 @@ red = (255,0,0)
 purple = (255,0,255)
 yellow   = ( 255, 255,   0)
 
-Trollicon=pygame.image.load('images/Trollman.png')
-pygame.display.set_icon(Trollicon)
+Pacman=pygame.image.load('images/pacman.png')
+pygame.display.set_icon(Pacman)
 
 #Add music
-pygame.mixer.init()
-pygame.mixer.music.load('pacman.mp3')
-pygame.mixer.music.play(-1, 0.0)
+#pygame.mixer.init()
+#pygame.mixer.music.load('pacman.mp3')
+#pygame.mixer.music.play(-1, 0.0)
 
 # This class represents the bar at the bottom that the player controls
 class Wall(pygame.sprite.Sprite):
@@ -399,7 +399,7 @@ def startGame():
 
 
   # Create the player paddle object
-  Pacman = Player( w, p_h, "images/Trollman.png" )
+  Pacman = Player( w, p_h, "images/pacman.png" )
   all_sprites_list.add(Pacman)
   pacman_collide.add(Pacman)
    
@@ -418,6 +418,14 @@ def startGame():
   Clyde=Ghost( c_w, m_h, "images/Clyde.png" )
   monsta_list.add(Clyde)
   all_sprites_list.add(Clyde)
+
+  Blinky_list = pygame.sprite.RenderPlain()
+
+  Pinky_list = pygame.sprite.RenderPlain()
+
+  Inky_list = pygame.sprite.RenderPlain()
+
+  Clyde_list = pygame.sprite.RenderPlain()
 
   # Draw the grid
   for row in range(19):
