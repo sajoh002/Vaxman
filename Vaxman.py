@@ -1,6 +1,6 @@
 # Sample Python/Pygame Programs
 # Forked from https://github.com/hbokmann/Pacman
-# Addapted for EA Games Forage Virtual Internship
+# Adapted for EA Games Forage Virtual Internship
 
 import pygame
   
@@ -380,6 +380,14 @@ def startGame():
 
   pacman_collide = pygame.sprite.RenderPlain()
 
+  blinky_list = pygame.sprite.RenderPlain()
+
+  pinky_list = pygame.sprite.RenderPlain()
+
+  inky_list = pygame.sprite.RenderPlain()
+
+  clyde_list = pygame.sprite.RenderPlain()
+
   wall_list = setupRoomOne(all_sprites_list)
 
   gate = setupGate(all_sprites_list)
@@ -406,26 +414,28 @@ def startGame():
   Blinky=Ghost( w, b_h, "images/Blinky.png" )
   monsta_list.add(Blinky)
   all_sprites_list.add(Blinky)
+  blinky_list.add(Blinky)
 
   Pinky=Ghost( w, m_h, "images/Pinky.png" )
   monsta_list.add(Pinky)
   all_sprites_list.add(Pinky)
+  pinky_list.add(Pinky)
    
   Inky=Ghost( i_w, m_h, "images/Inky.png" )
   monsta_list.add(Inky)
   all_sprites_list.add(Inky)
+  inky_list.add(Inky)
    
   Clyde=Ghost( c_w, m_h, "images/Clyde.png" )
   monsta_list.add(Clyde)
   all_sprites_list.add(Clyde)
+  clyde_list.add(Clyde)
 
-  Blinky_list = pygame.sprite.RenderPlain()
+  num_of_ghosts = len(monsta_list)
 
-  Pinky_list = pygame.sprite.RenderPlain()
+  ADDGHOSTS = pygame.USEREVENT + 1
+  pygame.time.set_timer(ADDGHOSTS, 30000)
 
-  Inky_list = pygame.sprite.RenderPlain()
-
-  Clyde_list = pygame.sprite.RenderPlain()
 
   # Draw the grid
   for row in range(19):
@@ -483,42 +493,59 @@ def startGame():
                   Pacman.changespeed(0,30)
               if event.key == pygame.K_DOWN:
                   Pacman.changespeed(0,-30)
+
+          if event.type == ADDGHOSTS:
+            for ghost in monsta_list.sprites():
+              new_ghost = ghost.rect.copy()
+              monsta_list.add(new_ghost)
+              all_sprites_list.add(new_ghost)
+
           
       # ALL EVENT PROCESSING SHOULD GO ABOVE THIS COMMENT
    
       # ALL GAME LOGIC SHOULD GO BELOW THIS COMMENT
       Pacman.update(wall_list,gate)
 
-      returned = Pinky.changespeed(Pinky_directions,False,p_turn,p_steps,pl)
-      p_turn = returned[0]
-      p_steps = returned[1]
-      Pinky.changespeed(Pinky_directions,False,p_turn,p_steps,pl)
-      Pinky.update(wall_list,False)
+      for ghost in pinky_list.sprites():
+        returned = ghost.changespeed(Pinky_directions,False,p_turn,p_steps,pl)
+        p_turn = returned[0]
+        p_steps = returned[1]
+        ghost.changespeed(Pinky_directions,False,p_turn,p_steps,pl)
+        ghost.update(wall_list,False)
 
-      returned = Blinky.changespeed(Blinky_directions,False,b_turn,b_steps,bl)
-      b_turn = returned[0]
-      b_steps = returned[1]
-      Blinky.changespeed(Blinky_directions,False,b_turn,b_steps,bl)
-      Blinky.update(wall_list,False)
+      for ghost in blinky_list.sprites():
+        returned = ghost.changespeed(Blinky_directions,False,b_turn,b_steps,bl)
+        b_turn = returned[0]
+        b_steps = returned[1]
+        ghost.changespeed(Blinky_directions,False,b_turn,b_steps,bl)
+        ghost.update(wall_list,False)
 
-      returned = Inky.changespeed(Inky_directions,False,i_turn,i_steps,il)
-      i_turn = returned[0]
-      i_steps = returned[1]
-      Inky.changespeed(Inky_directions,False,i_turn,i_steps,il)
-      Inky.update(wall_list,False)
+      for ghost in inky_list.sprites():
+        returned = ghost.changespeed(Inky_directions,False,i_turn,i_steps,il)
+        i_turn = returned[0]
+        i_steps = returned[1]
+        ghost.changespeed(Inky_directions,False,i_turn,i_steps,il)
+        ghost.update(wall_list,False)
 
-      returned = Clyde.changespeed(Clyde_directions,"clyde",c_turn,c_steps,cl)
-      c_turn = returned[0]
-      c_steps = returned[1]
-      Clyde.changespeed(Clyde_directions,"clyde",c_turn,c_steps,cl)
-      Clyde.update(wall_list,False)
+      for ghost in clyde_list.sprites():
+        returned = ghost.changespeed(Clyde_directions,"clyde",c_turn,c_steps,cl)
+        c_turn = returned[0]
+        c_steps = returned[1]
+        ghost.changespeed(Clyde_directions,"clyde",c_turn,c_steps,cl)
+        ghost.update(wall_list,False)
 
       # See if the Pacman block has collided with anything.
       blocks_hit_list = pygame.sprite.spritecollide(Pacman, block_list, True)
+      ghost_hit_list = pygame.sprite.spritecollide(Pacman, monsta_list, True)
        
       # Check the list of collisions.
       if len(blocks_hit_list) > 0:
           score +=len(blocks_hit_list)
+      
+      # Remove ghosts Pacman has collided with (vaccinated)
+      if len(ghost_hit_list) > 0:
+        for ghost in ghost_hit_list:
+          ghost.kill()
       
       # ALL GAME LOGIC SHOULD GO ABOVE THIS COMMENT
    
@@ -536,9 +563,7 @@ def startGame():
       if score == bll:
         doNext("Congratulations, you won!",145,all_sprites_list,block_list,monsta_list,pacman_collide,wall_list,gate)
 
-      monsta_hit_list = pygame.sprite.spritecollide(Pacman, monsta_list, False)
-
-      if monsta_hit_list:
+      if num_of_ghosts > 128:
         doNext("Game Over",235,all_sprites_list,block_list,monsta_list,pacman_collide,wall_list,gate)
 
       # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
